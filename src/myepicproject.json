@@ -43,6 +43,90 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "removeGif",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "gifId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "upVote",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "gifId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "downVote",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "gifId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "removeVote",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "gifId",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -59,7 +143,15 @@
             "name": "gifList",
             "type": {
               "vec": {
-                "defined": "ItemStruct"
+                "defined": "GifStruct"
+              }
+            }
+          },
+          {
+            "name": "votes",
+            "type": {
+              "vec": {
+                "defined": "VoteStruct"
               }
             }
           }
@@ -69,10 +161,14 @@
   ],
   "types": [
     {
-      "name": "ItemStruct",
+      "name": "GifStruct",
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "gifId",
+            "type": "u64"
+          },
           {
             "name": "gifLink",
             "type": "string"
@@ -80,6 +176,26 @@
           {
             "name": "userAddress",
             "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteStruct",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "userAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "gifId",
+            "type": "u64"
+          },
+          {
+            "name": "voteValue",
+            "type": "i8"
           }
         ]
       }
