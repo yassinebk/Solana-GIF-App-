@@ -1,4 +1,5 @@
-{
+
+export const kp_json=`{
     "_keypair": {
         "publicKey": {
             "0": 239,
@@ -102,3 +103,4 @@
         }
     }
 }
+`

@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("EcFhg4MrQY5QNFs3H1VAPy9JhLFARFrLJoDeKfUsUSAi");
+declare_id!("A59NWes8W8oBKHt2zKaU8TN6nra3vn1XEn4x1PYr3CF1");
 
 #[program]
 pub mod myepicproject {
@@ -9,7 +9,7 @@ pub mod myepicproject {
         let base_account = &mut ctx.accounts.base_account;
         base_account.total_gifs = 0;
         base_account.votes = vec![];
-        base_account.gif_list=vec![];
+        base_account.gif_list = vec![];
         Ok(())
     }
 
@@ -119,7 +119,7 @@ pub mod myepicproject {
 
 #[derive(Accounts)]
 pub struct StartStuffOff<'info> {
-    #[account(init,payer=user,space=9000)]
+    #[account(init,payer=user,space=160000)]
     pub base_account: Account<'info, BaseAccount>,
     #[account(mut)]
     pub user: Signer<'info>,

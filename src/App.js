@@ -29,7 +29,6 @@ const App = () => {
     );
     return provider;
   };
-  const providerReference = useRef(getProvider());
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -79,7 +78,7 @@ const App = () => {
           {walletAddress ? (
             <AuthenticatedContent
               walletAddress={walletAddress}
-              provider={getProvider()}
+              provider={getProvider}
             />
           ) : (
             <NotAuthenticatedContent connectWallet={connectWallet} />

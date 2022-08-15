@@ -3,11 +3,11 @@ import { PublicKey } from "@solana/web3.js";
 import React, { useState, useEffect } from "react";
 import idl from "../myepicproject.json";
 import GifCard from "./GifCard";
-
 import kp from "../keypair.json";
 
 const arr = Object.values(kp._keypair.secretKey);
 const secret = new Uint8Array(arr);
+console.log(secret);
 const baseAccount = web3.Keypair.fromSecretKey(secret);
 
 const programID = new PublicKey(idl.metadata.address);
@@ -25,7 +25,7 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
   const getBaseAccountData = async () => {
     try {
       console.log("here");
-      const program = new Program(idl, programID, provider);
+      const program = new Program(idl, programID, provider());
       console.log(program);
       const account = await program.account.baseAccount.fetch(
         baseAccount.publicKey
@@ -33,10 +33,10 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
       console.log("here", account);
 
       console.log("Got the account ", account);
-      // setGifList(account.gifList);
-      // setVotes(account.votes);
+      setGifList(account.gifList);
+      setVotes(account.votes);
     } catch (error) {
-      console.log("error", error.message);
+      console.log("error", error.message, error);
     }
   };
 
@@ -44,11 +44,11 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
     if (inputValue.length > 0) {
       console.log("Gif link:", inputValue);
       try {
-        const program = new Program(idl, programID, provider);
+        const program = new Program(idl, programID, provider());
         await program.rpc.addGif(inputValue, {
           accounts: {
             baseAccount: baseAccount.publicKey,
-            user: provider.wallet.publicKey,
+            user: provider().wallet.publicKey,
           },
         });
         await getBaseAccountData();
@@ -61,12 +61,13 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
 
   const createGifAccount = async () => {
     try {
-      console.log(provider);
-      const program = new Program(idl, programID, provider);
+      console.log(provider());
+      const program = new Program(idl, programID, provider());
+      console.log("program", program);
       await program.rpc.startStuffOff({
         accounts: {
           baseAccount: baseAccount.publicKey,
-          user: provider.wallet.publicKey,
+          user: provider().wallet.publicKey,
           systemProgram: SystemProgram.programId,
         },
         signers: [baseAccount],
@@ -123,6 +124,7 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
         {gifList.map((item, index) => (
           <GifCard
             gif={item}
+            key={item.gifId}
             votes={votes.filter((v) => v.gifId === item.gifId)}
           />
         ))}
