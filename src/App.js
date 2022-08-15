@@ -193,6 +193,7 @@ const App = () => {
     if (walletAddress) {
       getGifList();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
   return (
     <div className="App">
