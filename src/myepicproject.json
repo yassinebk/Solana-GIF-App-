@@ -43,6 +43,90 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "removeGif",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "gifId",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "upVote",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "gifId",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "downVote",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "gifId",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "removeVote",
+      "accounts": [
+        {
+          "name": "baseAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "gifId",
+          "type": "u32"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -53,13 +137,21 @@
         "fields": [
           {
             "name": "totalGifs",
-            "type": "u64"
+            "type": "u32"
           },
           {
             "name": "gifList",
             "type": {
               "vec": {
-                "defined": "ItemStruct"
+                "defined": "GifStruct"
+              }
+            }
+          },
+          {
+            "name": "votes",
+            "type": {
+              "vec": {
+                "defined": "VoteStruct"
               }
             }
           }
@@ -69,10 +161,14 @@
   ],
   "types": [
     {
-      "name": "ItemStruct",
+      "name": "GifStruct",
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "gifId",
+            "type": "u32"
+          },
           {
             "name": "gifLink",
             "type": "string"
@@ -83,9 +179,29 @@
           }
         ]
       }
+    },
+    {
+      "name": "VoteStruct",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "userAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "gifId",
+            "type": "u32"
+          },
+          {
+            "name": "voteValue",
+            "type": "i8"
+          }
+        ]
+      }
     }
   ],
   "metadata": {
-    "address": "EcFhg4MrQY5QNFs3H1VAPy9JhLFARFrLJoDeKfUsUSAi"
+    "address": "A59NWes8W8oBKHt2zKaU8TN6nra3vn1XEn4x1PYr3CF1"
   }
 }

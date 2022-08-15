@@ -136,7 +136,7 @@ const App = () => {
       console.log("Got the account ", account);
       setGifList(account.gifList);
     } catch (error) {
-      console.log("error");
+      console.log("error", error);
     }
   };
 
