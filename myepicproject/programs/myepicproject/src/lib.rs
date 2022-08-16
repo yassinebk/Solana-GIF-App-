@@ -24,12 +24,11 @@ pub mod myepicproject {
             user_address: *user.to_account_info().key,
         };
         base_account.gif_list.push(item);
-        base_account.total_gifs += 1;
 
         Ok(())
     }
 
-    pub fn remove_gif(ctx: Context<RemoveGif>, gif_id: u64) -> Result<()> {
+    pub fn remove_gif(ctx: Context<RemoveGif>, gif_id: u32) -> Result<()> {
         let base_account = &mut ctx.accounts.base_account;
         let base_account_imut = base_account.clone();
 
@@ -45,7 +44,7 @@ pub mod myepicproject {
             .votes
             .iter()
             .find(|x| x.gif_id == gif_id)
-            .map(|x| {
+            .map(|_x| {
                 base_account.votes.remove(
                     base_account_imut
                         .votes
@@ -58,50 +57,59 @@ pub mod myepicproject {
         Ok(())
     }
 
-    pub fn up_vote(ctx: Context<AddVote>, gif_id: u64) -> Result<()> {
+    pub fn up_vote(ctx: Context<AddVote>, gif_id: u32) -> Result<()> {
         let base_account = &mut ctx.accounts.base_account;
         let votes_imut = base_account.votes.clone();
         let user_address = ctx.accounts.user.to_account_info().key;
-        votes_imut
-            .iter()
-            .find(|x| x.gif_id == gif_id && x.user_address == *user_address)
-            .map(|x| {
-                if x.vote_value == -1 {
+        if !votes_imut.iter().any(|x| {
+            (*x).gif_id == gif_id && (*x).user_address == *user_address && (*x).vote_value == 1
+        }) {
+            votes_imut
+                .iter()
+                .find(|x| x.gif_id == gif_id && x.user_address == *user_address)
+                .map(|x| {
+                    if x.vote_value == -1 {
+                        base_account
+                            .votes
+                            .remove(votes_imut.iter().position(|y| y.gif_id == gif_id).unwrap());
+                    }
+                });
+
+            base_account.votes.push(VoteStruct {
+                gif_id: gif_id,
+                user_address: *user_address,
+                vote_value: 1,
+            });
+        }
+        Ok(())
+    }
+
+    pub fn down_vote(ctx: Context<AddVote>, gif_id: u32) -> Result<()> {
+        let base_account = &mut ctx.accounts.base_account;
+        let user_address = ctx.accounts.user.to_account_info().key;
+        let votes_imut = base_account.votes.clone();
+        if !votes_imut.iter().any(|x| {
+            (*x).gif_id == gif_id && (*x).user_address == *user_address && (*x).vote_value == -1
+        }) {
+            let vote = VoteStruct {
+                gif_id: gif_id,
+                user_address: *ctx.accounts.user.to_account_info().key,
+                vote_value: -1,
+            };
+
+            votes_imut.iter().find(|x| x.gif_id == gif_id).map(|x| {
+                if x.vote_value == 1 {
                     base_account
                         .votes
                         .remove(votes_imut.iter().position(|y| y.gif_id == gif_id).unwrap());
                 }
             });
-
-        base_account.votes.push(VoteStruct {
-            gif_id: gif_id,
-            user_address: *user_address,
-            vote_value: 1,
-        });
+            base_account.votes.push(vote);
+        }
         Ok(())
     }
 
-    pub fn down_vote(ctx: Context<AddVote>, gif_id: u64) -> Result<()> {
-        let base_account = &mut ctx.accounts.base_account;
-        let votes_imut = base_account.votes.clone();
-        let vote = VoteStruct {
-            gif_id: gif_id,
-            user_address: *ctx.accounts.user.to_account_info().key,
-            vote_value: -1,
-        };
-
-        votes_imut.iter().find(|x| x.gif_id == gif_id).map(|x| {
-            if x.vote_value == 1 {
-                base_account
-                    .votes
-                    .remove(votes_imut.iter().position(|y| y.gif_id == gif_id).unwrap());
-            }
-        });
-        base_account.votes.push(vote);
-        Ok(())
-    }
-
-    pub fn remove_vote(ctx: Context<RemoveVote>, gif_id: u64) -> Result<()> {
+    pub fn remove_vote(ctx: Context<RemoveVote>, gif_id: u32) -> Result<()> {
         let base_account = &mut ctx.accounts.base_account;
         let votes_imut = base_account.votes.clone();
         base_account.votes.remove(
@@ -119,7 +127,7 @@ pub mod myepicproject {
 
 #[derive(Accounts)]
 pub struct StartStuffOff<'info> {
-    #[account(init,payer=user,space=160000)]
+    #[account(init,payer=user,space=9000)]
     pub base_account: Account<'info, BaseAccount>,
     #[account(mut)]
     pub user: Signer<'info>,
@@ -163,7 +171,7 @@ pub struct RemoveVote<'info> {
 
 #[derive(Debug, Clone, AnchorSerialize, AnchorDeserialize)]
 pub struct GifStruct {
-    pub gif_id: u64,
+    pub gif_id: u32,
     pub gif_link: String,
     pub user_address: Pubkey,
 }
@@ -172,14 +180,14 @@ pub struct GifStruct {
 
 pub struct VoteStruct {
     pub user_address: Pubkey,
-    pub gif_id: u64,
+    pub gif_id: u32,
     pub vote_value: i8,
 }
 
 #[account]
 
 pub struct BaseAccount {
-    pub total_gifs: u64,
+    pub total_gifs: u32,
     pub gif_list: Vec<GifStruct>,
     pub votes: Vec<VoteStruct>,
 }

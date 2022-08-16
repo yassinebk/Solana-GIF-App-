@@ -61,7 +61,7 @@
       "args": [
         {
           "name": "gifId",
-          "type": "u64"
+          "type": "u32"
         }
       ]
     },
@@ -82,7 +82,7 @@
       "args": [
         {
           "name": "gifId",
-          "type": "u64"
+          "type": "u32"
         }
       ]
     },
@@ -103,7 +103,7 @@
       "args": [
         {
           "name": "gifId",
-          "type": "u64"
+          "type": "u32"
         }
       ]
     },
@@ -124,7 +124,7 @@
       "args": [
         {
           "name": "gifId",
-          "type": "u64"
+          "type": "u32"
         }
       ]
     }
@@ -137,7 +137,7 @@
         "fields": [
           {
             "name": "totalGifs",
-            "type": "u64"
+            "type": "u32"
           },
           {
             "name": "gifList",
@@ -167,7 +167,7 @@
         "fields": [
           {
             "name": "gifId",
-            "type": "u64"
+            "type": "u32"
           },
           {
             "name": "gifLink",
@@ -191,7 +191,7 @@
           },
           {
             "name": "gifId",
-            "type": "u64"
+            "type": "u32"
           },
           {
             "name": "voteValue",

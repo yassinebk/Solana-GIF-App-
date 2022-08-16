@@ -1,6 +1,7 @@
 import { Provider } from "@project-serum/anchor";
 import { clusterApiUrl, Connection } from "@solana/web3.js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 import "./App.css";
 import twitterLogo from "./assets/twitter-logo.svg";
 import AuthenticatedContent from "./components/AuthenticatedContent";
@@ -50,7 +51,6 @@ const App = () => {
     }
   };
 
-
   const connectWallet = async () => {
     const { solana } = window;
     if (solana) {
@@ -78,7 +78,7 @@ const App = () => {
           {walletAddress ? (
             <AuthenticatedContent
               walletAddress={walletAddress}
-              provider={getProvider}
+              getProvider={getProvider}
             />
           ) : (
             <NotAuthenticatedContent connectWallet={connectWallet} />
@@ -94,6 +94,7 @@ const App = () => {
           >{`built on @${TWITTER_HANDLE}`}</a>
         </div>
       </div>
+      <ToastContainer autoClose={1000} theme="dark" />
     </div>
   );
 };

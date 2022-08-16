@@ -112,7 +112,7 @@
   object-fit: cover;
 }
 
-.connected-container input[type='text'] {
+.connected-container input[type="text"] {
   display: inline-block;
   color: white;
   padding: 10px;
@@ -128,4 +128,56 @@
 
 .connected-container button {
   height: 50px;
+}
+.card-controls {
+  display: flex;
+  flex-direction: row;
+}
+.icon-section {
+  max-width: 100px;
+  margin: 10px auto;
+  color: #00abfb;
+  display: flex;
+  flex-direction: row;
+  /* width: 100%; */
+  flex: 1;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+.img-container {
+  position: relative;
+}
+
+.delete-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  background-color: transparent;
+  transition: all ease-in-out 400ms;
+  border-radius: 10px;
+}
+
+.delete-icon:hover {
+  transform: scale(1.2);
+}
+
+.delete-icon button {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 120px;
+  border-style: none;
+}
+
+.thumb-icon:hover {
+  transform: scale(1.2);
+}
+
+.thumb-icon {
+  cursor: pointer;
+  transition: all ease-in-out 200ms;
 }

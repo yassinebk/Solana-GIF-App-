@@ -1,9 +1,11 @@
 import { Program, web3 } from "@project-serum/anchor";
 import { PublicKey } from "@solana/web3.js";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
+import kp from "../keypair.json";
 import idl from "../myepicproject.json";
 import GifCard from "./GifCard";
-import kp from "../keypair.json";
 
 const arr = Object.values(kp._keypair.secretKey);
 const secret = new Uint8Array(arr);
@@ -13,7 +15,7 @@ const baseAccount = web3.Keypair.fromSecretKey(secret);
 const programID = new PublicKey(idl.metadata.address);
 const { SystemProgram } = web3;
 
-const AuthenticatedContent = ({ walletAddress, provider }) => {
+const AuthenticatedContent = ({ walletAddress, getProvider }) => {
   const [gifList, setGifList] = useState(null);
   const [votes, setVotes] = useState(null);
   const [inputValue, setInputValue] = useState("");
@@ -25,11 +27,19 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
   const getBaseAccountData = async () => {
     try {
       console.log("here");
-      const program = new Program(idl, programID, provider());
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
       console.log(program);
-      const account = await program.account.baseAccount.fetch(
-        baseAccount.publicKey
+      const account = await toast.promise(
+        program.account.baseAccount.fetch(baseAccount.publicKey),
+
+        {
+          pending: "Fetching gifs ",
+          success: "Have fun  👌",
+          error: "Error fetching gifs 🤯",
+        }
       );
+
       console.log("here", account);
 
       console.log("Got the account ", account);
@@ -40,38 +50,53 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
     }
   };
 
-  const sendGif = async ({ baseAccount, idl }) => {
+  const sendGif = async () => {
     if (inputValue.length > 0) {
       console.log("Gif link:", inputValue);
       try {
-        const program = new Program(idl, programID, provider());
-        await program.rpc.addGif(inputValue, {
-          accounts: {
-            baseAccount: baseAccount.publicKey,
-            user: provider().wallet.publicKey,
-          },
-        });
+        const provider = getProvider();
+        const program = new Program(idl, programID, provider);
+        await toast.promise(
+          program.rpc.addGif(inputValue, {
+            accounts: {
+              baseAccount: baseAccount.publicKey,
+              user: provider.wallet.publicKey,
+            },
+          }),
+          {
+            pending: "Adding GIF 🕐 ",
+            success: "GIF added  👌",
+            error: "Error adding GIF 🤯",
+          }
+        );
         await getBaseAccountData();
         setInputValue("");
       } catch (error) {
-        console.error("Error: ", error);
+        console.error("Error: ", error.message);
       }
     } else console.log("Empty input.");
   };
 
   const createGifAccount = async () => {
     try {
-      console.log(provider());
-      const program = new Program(idl, programID, provider());
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
       console.log("program", program);
-      await program.rpc.startStuffOff({
-        accounts: {
-          baseAccount: baseAccount.publicKey,
-          user: provider().wallet.publicKey,
-          systemProgram: SystemProgram.programId,
-        },
-        signers: [baseAccount],
-      });
+      await toast.promise(
+        program.rpc.startStuffOff({
+          accounts: {
+            baseAccount: baseAccount.publicKey,
+            user: provider.wallet.publicKey,
+            systemProgram: SystemProgram.programId,
+          },
+          signers: [baseAccount],
+        }),
+        {
+          error: "Error creating account 🤯",
+          pending: "Creating account 🕐 ",
+          success: "Account created  👌",
+        }
+      );
 
       console.log(
         "Created a new BaseAccount w/ address:",
@@ -80,6 +105,118 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
       await getBaseAccountData();
     } catch (error) {
       console.log("Error creating basic account", error);
+    }
+  };
+
+  const upvote = async (gifId) => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
+      await toast.promise(
+        program.rpc.upVote(gifId, {
+          accounts: {
+            baseAccount: baseAccount.publicKey,
+            user: provider.wallet.publicKey,
+          },
+        }),
+        {
+          success: "Upvoted 👍 ",
+          pending: "Upvoting 🕐",
+          error: "Error upvoting 🤯",
+        }
+      );
+
+      await getBaseAccountData();
+    } catch (error) {
+      console.log("failure upvoting gif ", " with error: ", error.message);
+    }
+  };
+
+  const downvote = async (gifId) => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
+      await toast.promise(
+        program.rpc.downvote(gifId, {
+          accounts: {
+            baseAccount: baseAccount.publicKey,
+            user: provider.wallet.publicKey,
+          },
+        }),
+        {
+          success: "Downvoted 👎 ",
+          pending: "Upvoting 🕐",
+          error: "Error upvoting 🤯",
+        }
+      );
+
+      await getBaseAccountData();
+    } catch (error) {
+      console.log(
+        "failure downvoting gif ",
+        gifId,
+        " with error: ",
+        error.message
+      );
+    }
+  };
+
+  const removeGif = async (gifId) => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
+      await toast.promise(
+        program.rpc.removeGif(gifId, {
+          accounts: {
+            baseAccount: baseAccount.publicKey,
+            user: provider.wallet.publicKey,
+          },
+        }),
+        {
+          success: "Removed gif 👌",
+          pending: "Removing gif 🕐",
+          error: "Error removing gif 🤯",
+        }
+      );
+
+      await getBaseAccountData();
+    } catch (error) {
+      console.log(
+        "failure upvoting gif ",
+        gifId,
+        " with error: ",
+        error.message
+      );
+    }
+  };
+
+  const removeVote = async (gifId) => {
+    try {
+      const provider = getProvider();
+      console.log("removing vote");
+      const program = new Program(idl, programID, provider);
+      await toast.promise(
+        program.rpc.removeVote(gifId, {
+          accounts: {
+            baseAccount: baseAccount.publicKey,
+            user: provider.wallet.publicKey,
+          },
+        }),
+        {
+          success: "Removed vote 👍 ",
+          pending: "Removing vote 🕐",
+          error: "Error removing vote 🤯",
+        }
+      );
+
+      await getBaseAccountData();
+    } catch (error) {
+      console.log(
+        "failure upvoting gif ",
+        gifId,
+        " with error: ",
+        error.message
+      );
     }
   };
 
@@ -123,9 +260,15 @@ const AuthenticatedContent = ({ walletAddress, provider }) => {
       <div className="gif-grid">
         {gifList.map((item, index) => (
           <GifCard
+            isMyGif={item.userAddress.toString() === walletAddress}
+            walletAddress={walletAddress}
+            upvote={upvote}
+            downvote={downvote}
+            removeGif={removeGif}
+            removeVote={removeVote}
             gif={item}
             key={item.gifId}
-            votes={votes.filter((v) => v.gifId === item.gifId)}
+            votes={votes ? votes.filter((v) => v.gifId === item.gifId) : []}
           />
         ))}
       </div>
