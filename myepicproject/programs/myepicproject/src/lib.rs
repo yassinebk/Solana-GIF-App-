@@ -44,11 +44,7 @@ pub mod myepicproject {
             .votes
             .iter()
             .find(|x| x.gif_id == gif_id)
-<<<<<<< HEAD
-            .map(|x| {
-=======
             .map(|_x| {
->>>>>>> tracking-base_address
                 base_account.votes.remove(
                     base_account_imut
                         .votes
@@ -65,24 +61,6 @@ pub mod myepicproject {
         let base_account = &mut ctx.accounts.base_account;
         let votes_imut = base_account.votes.clone();
         let user_address = ctx.accounts.user.to_account_info().key;
-<<<<<<< HEAD
-        votes_imut
-            .iter()
-            .find(|x| x.gif_id == gif_id && x.user_address == *user_address)
-            .map(|x| {
-                if x.vote_value == -1 {
-                    base_account
-                        .votes
-                        .remove(votes_imut.iter().position(|y| y.gif_id == gif_id).unwrap());
-                }
-            });
-
-        base_account.votes.push(VoteStruct {
-            gif_id: gif_id,
-            user_address: *user_address,
-            vote_value: 1,
-        });
-=======
         if !votes_imut.iter().any(|x| {
             (*x).gif_id == gif_id && (*x).user_address == *user_address && (*x).vote_value == 1
         }) {
@@ -103,29 +81,11 @@ pub mod myepicproject {
                 vote_value: 1,
             });
         }
->>>>>>> tracking-base_address
         Ok(())
     }
 
     pub fn down_vote(ctx: Context<AddVote>, gif_id: u32) -> Result<()> {
         let base_account = &mut ctx.accounts.base_account;
-<<<<<<< HEAD
-        let votes_imut = base_account.votes.clone();
-        let vote = VoteStruct {
-            gif_id: gif_id,
-            user_address: *ctx.accounts.user.to_account_info().key,
-            vote_value: -1,
-        };
-
-        votes_imut.iter().find(|x| x.gif_id == gif_id).map(|x| {
-            if x.vote_value == 1 {
-                base_account
-                    .votes
-                    .remove(votes_imut.iter().position(|y| y.gif_id == gif_id).unwrap());
-            }
-        });
-        base_account.votes.push(vote);
-=======
         let user_address = ctx.accounts.user.to_account_info().key;
         let votes_imut = base_account.votes.clone();
         if !votes_imut.iter().any(|x| {
@@ -146,7 +106,6 @@ pub mod myepicproject {
             });
             base_account.votes.push(vote);
         }
->>>>>>> tracking-base_address
         Ok(())
     }
 
