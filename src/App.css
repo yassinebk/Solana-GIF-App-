@@ -1,4 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100;0,400;1,100&display=swap");
 .App {
+  fontfamily: "Merriweather", Helvetica, serif;
   height: 100vh;
   background-color: #1a202c;
   overflow: auto;
@@ -31,6 +33,14 @@
 .sub-text {
   font-size: 25px;
   color: white;
+}
+
+.solana-title {
+  font-weight: 500;
+  background: -webkit-linear-gradient(left, #9945ff 30%, #14f195 60%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .gradient-text {
@@ -89,8 +99,8 @@
 }
 
 .gif-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  display: flex;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   grid-gap: 1.5rem;
   justify-items: center;
   margin: 0;
@@ -155,12 +165,15 @@
 
 .delete-icon {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 10px;
+  right: 5px;
+
   cursor: pointer;
   background-color: transparent;
   transition: all ease-in-out 400ms;
-  border-radius: 10px;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
 }
 
 .delete-icon:hover {
@@ -168,9 +181,11 @@
 }
 
 .delete-icon button {
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 120px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
   border-style: none;
+  height: 40px;
+  width: 40px;
 }
 
 .thumb-icon:hover {

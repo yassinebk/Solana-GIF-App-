@@ -17,7 +17,7 @@ const { SystemProgram } = web3;
 
 const AuthenticatedContent = ({ walletAddress, getProvider }) => {
   const [gifList, setGifList] = useState(null);
-  const [votes, setVotes] = useState(null);
+  const [votes, setVotes] = useState([]);
   const [inputValue, setInputValue] = useState("");
 
   const onInputChange = ({ target }) => {
@@ -258,19 +258,25 @@ const AuthenticatedContent = ({ walletAddress, getProvider }) => {
         </button>
       </form>
       <div className="gif-grid">
-        {gifList.map((item, index) => (
-          <GifCard
-            isMyGif={item.userAddress.toString() === walletAddress}
-            walletAddress={walletAddress}
-            upvote={upvote}
-            downvote={downvote}
-            removeGif={removeGif}
-            removeVote={removeVote}
-            gif={item}
-            key={item.gifId}
-            votes={votes ? votes.filter((v) => v.gifId === item.gifId) : []}
-          />
-        ))}
+        {gifList
+          .sort(
+            (a, b) =>
+              -votes.filter((v) => v.gifId === a.gifId).length +
+              votes.filter((v) => v.gifId === b.gifId).length
+          )
+          .map((item, index) => (
+            <GifCard
+              isMyGif={item.userAddress.toString() === walletAddress}
+              walletAddress={walletAddress}
+              upvote={upvote}
+              downvote={downvote}
+              removeGif={removeGif}
+              removeVote={removeVote}
+              gif={item}
+              key={item.gifId}
+              votes={votes ? votes.filter((v) => v.gifId === item.gifId) : []}
+            />
+          ))}
       </div>
     </div>
   );

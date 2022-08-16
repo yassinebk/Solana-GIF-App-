@@ -8,7 +8,7 @@ import AuthenticatedContent from "./components/AuthenticatedContent";
 import NotAuthenticatedContent from "./components/NotAuthenticatedContent";
 
 // Constants
-const TWITTER_HANDLE = "_buildspace";
+const TWITTER_HANDLE = "YBK_FireLights";
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 // hardcoded network here ! to change for more dynamic program.
@@ -73,7 +73,8 @@ const App = () => {
         <div className="header-container">
           <p className="header">🖼 GIF Portal</p>
           <p className="sub-text">
-            View your GIF collection in the metaverse ✨
+            View your GIF collection in the metaverse with{" "}
+            <span className="solana-title">Solana</span>✨
           </p>
           {walletAddress ? (
             <AuthenticatedContent
